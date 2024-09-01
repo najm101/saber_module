@@ -192,15 +192,16 @@ class EditorState extends State<Editor> {
 
   @override
   void initState() {
-    Prefs.init();
-    DynamicMaterialApp.addFullscreenListener(_setState);
+    
     StrokeOptionsExtension.setDefaults();
+    Prefs.init();
 
     setLocale();
     Prefs.locale.addListener(setLocale);
     Prefs.customDataDir.addListener(FileManager.migrateDataDir);
     startSyncAfterLoaded();
     setupBackgroundSync();
+    DynamicMaterialApp.addFullscreenListener(_setState);
     _initAsync();
     _assignKeybindings();
 
