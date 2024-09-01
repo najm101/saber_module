@@ -31,34 +31,14 @@ import 'package:window_manager/window_manager.dart';
 import 'package:worker_manager/worker_manager.dart';
 import 'package:workmanager/workmanager.dart';
 
-Future<void> main(
-  List<String> args, {
+Future<void> mainEditor({
   WidgetsBinding? Function() initWidgetsBinding =
       WidgetsFlutterBinding.ensureInitialized,
   void Function(Widget) runApp = runApp,
 }) async {
   initWidgetsBinding();
 
-  final parser = ArgParser()..addFlag('verbose', abbr: 'v', negatable: false);
-  final parsedArgs = parser.parse(args);
-
-  Logger.root.level =
-      (kDebugMode || parsedArgs.flag('verbose')) ? Level.INFO : Level.WARNING;
-  Logger.root.onRecord.listen((record) {
-    // ignore: avoid_print
-    print('${record.level.name}: ${record.loggerName}: ${record.message}');
-
-    // also log to devtools
-    dev.log(
-      record.message,
-      time: record.time,
-      level: record.level.value,
-      name: record.loggerName,
-      zone: record.zone,
-      error: record.error,
-      stackTrace: record.stackTrace,
-    );
-  });
+  
 
   if (Platform.isAndroid) {
     final deviceInfo = DeviceInfoPlugin();
@@ -72,40 +52,14 @@ Future<void> main(
   StrokeOptionsExtension.setDefaults();
   Prefs.init();
 
-  await Future.wait([
-    Prefs.customDataDir.waitUntilLoaded().then((_) => FileManager.init()),
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS)
-      windowManager.ensureInitialized(),
-    workerManager.init(),
-    Prefs.locale.waitUntilLoaded(),
-    Prefs.disableAds.waitUntilLoaded(),
-    Prefs.url.waitUntilLoaded(),
-    Prefs.allowInsecureConnections.waitUntilLoaded(),
-    InvertShader.init(),
-    PencilShader.init(),
-    PencilSound.preload(),
-    Printing.info().then((info) {
-      Editor.canRasterPdf = info.canRaster;
-    }),
-    OnyxSdkPenArea.init(),
-  ]);
-
-
 
   setLocale();
   Prefs.locale.addListener(setLocale);
   Prefs.customDataDir.addListener(FileManager.migrateDataDir);
-
-  LicenseRegistry.addLicense(() async* {
-    final license = await rootBundle.loadString('assets/google_fonts/OFL.txt');
-    yield LicenseEntryWithLineBreaks(['google_fonts'], license);
-  });
-
-  HttpOverrides.global = NcHttpOverrides();
-  runApp(TranslationProvider(child: const App()));
   startSyncAfterLoaded();
   setupBackgroundSync();
 }
+
 
 void startSyncAfterLoaded() async {
   await Prefs.username.waitUntilLoaded();
@@ -129,12 +83,8 @@ void startSyncAfterLoaded() async {
 }
 
 void setLocale() {
-  if (Prefs.locale.value.isNotEmpty &&
-      AppLocaleUtils.supportedLocalesRaw.contains(Prefs.locale.value)) {
-    LocaleSettings.setLocaleRaw(Prefs.locale.value);
-  } else {
-    LocaleSettings.useDeviceLocale();
-  }
+    LocaleSettings.setLocale(AppLocale.ar);
+  
 }
 
 void setupBackgroundSync() {

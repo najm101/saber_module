@@ -5,8 +5,7 @@ import 'package:simulator/simulator.dart';
 Future<void> main(List<String> args) async {
   FlavorConfig.setup();
 
-  await common.main(
-    args,
+  await common.mainEditor(
     initWidgetsBinding: SimulatorWidgetsFlutterBinding.ensureInitialized,
     runApp: runSimulatorApp,
   );
