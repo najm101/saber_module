@@ -169,7 +169,7 @@ abstract class Prefs {
       log.info(
           'Disabling ads because Android version ($androidVersion) is < 10');
     }
-    disableAds = PlainPref('disableAds', disableAdsDefault);
+    //disableAds = PlainPref('disableAds', disableAdsDefault);
 
     customDataDir = PlainPref('customDataDir', null);
     allowInsecureConnections = EncPref('allowInsecureConnections', false);
