@@ -171,7 +171,7 @@ abstract class Prefs {
     //iv = EncPref('iv', '');
 
     pfp = PlainPref('pfp', null);
-    syncInBackground = PlainPref('syncInBackground', true);
+   // syncInBackground = PlainPref('syncInBackground', true);
 
     appTheme = PlainPref('appTheme', ThemeMode.system);
     platform = PlainPref('platform', defaultTargetPlatform);
