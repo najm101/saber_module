@@ -192,9 +192,9 @@ class EditorState extends State<Editor> {
 
   @override
   void initState() {
+    Prefs.init();
     DynamicMaterialApp.addFullscreenListener(_setState);
     StrokeOptionsExtension.setDefaults();
-    Prefs.init();
 
     setLocale();
     Prefs.locale.addListener(setLocale);
