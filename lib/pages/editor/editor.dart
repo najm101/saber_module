@@ -195,7 +195,7 @@ class EditorState extends State<Editor> {
     
     StrokeOptionsExtension.setDefaults();
     Prefs.init();
-
+    FileManager.init(); 
     setLocale();
     Prefs.locale.addListener(setLocale);
     Prefs.customDataDir.addListener(FileManager.migrateDataDir);
