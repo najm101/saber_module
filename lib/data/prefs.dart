@@ -153,10 +153,10 @@ abstract class Prefs {
 
   static void init() {
     final disableAdsDefault = androidVersion < 10;
-    if (disableAdsDefault) {
-      log.info(
-          'Disabling ads because Android version ($androidVersion) is < 10');
-    }
+   // if (disableAdsDefault) {
+   //   log.info(
+   //       'Disabling ads because Android version ($androidVersion) is < 10');
+   // }
     //disableAds = PlainPref('disableAds', disableAdsDefault);
 
     //customDataDir = PlainPref('customDataDir', null);
