@@ -9,7 +9,6 @@ import 'package:image_save/image_save.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:saber_module/data/nextcloud/saber_syncer.dart';
 import 'package:saber_module/data/prefs.dart';
 import 'package:saber_module/i18n/strings.g.dart';
 import 'package:saber_module/pages/editor/editor.dart';
@@ -198,7 +197,6 @@ class FileManager {
 
     void afterWrite() {
       broadcastFileWrite(FileOperationType.write, filePath);
-      if (alsoUpload) syncer.uploader.enqueueRel(filePath);
       if (filePath.endsWith(Editor.extension)) {
         _removeReferences(
             '${filePath.substring(0, filePath.length - Editor.extension.length)}'
@@ -307,8 +305,7 @@ class FileManager {
       log.warning('Tried to move non-existent file from $fromPath to $toPath');
     }
 
-    syncer.uploader.enqueueRel(fromPath);
-    syncer.uploader.enqueueRel(toPath);
+
 
     _renameReferences(fromPath, toPath);
     broadcastFileWrite(FileOperationType.delete, fromPath);
@@ -353,7 +350,7 @@ class FileManager {
     if (!file.existsSync()) return;
     await file.delete();
 
-    if (alsoUpload) syncer.uploader.enqueueRel(filePath);
+   
 
     _removeReferences(filePath);
     broadcastFileWrite(FileOperationType.delete, filePath);

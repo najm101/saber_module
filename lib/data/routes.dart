@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:path_to_regexp/path_to_regexp.dart';
 import 'package:saber_module/components/theming/adaptive_icon.dart';
 import 'package:saber_module/i18n/strings.g.dart';
-import 'package:saber_module/pages/home/home.dart';
 
 // workaround to assign strings as enum values
 abstract class RoutePaths {
@@ -32,38 +31,6 @@ abstract class HomeRoutes {
   static final PathFunction _homeFunction = pathToFunction(RoutePaths.home);
 
   static List<_Route> get _routes => <_Route>[
-        _Route(
-          routePath: _homeFunction({'subpage': HomePage.recentSubpage}),
-          label: t.home.tabs.home,
-          icon: const AdaptiveIcon(
-            icon: Icons.home,
-            cupertinoIcon: CupertinoIcons.house_fill,
-          ),
-        ),
-        _Route(
-          routePath: _homeFunction({'subpage': HomePage.browseSubpage}),
-          label: t.home.tabs.browse,
-          icon: const AdaptiveIcon(
-            icon: Icons.folder,
-            cupertinoIcon: CupertinoIcons.folder_fill,
-          ),
-        ),
-        _Route(
-          routePath: _homeFunction({'subpage': HomePage.whiteboardSubpage}),
-          label: t.home.tabs.whiteboard,
-          icon: const AdaptiveIcon(
-            icon: Icons.draw,
-            cupertinoIcon: CupertinoIcons.pencil_outline,
-          ),
-        ),
-        _Route(
-          routePath: _homeFunction({'subpage': HomePage.settingsSubpage}),
-          label: t.home.tabs.settings,
-          icon: const AdaptiveIcon(
-            icon: Icons.settings,
-            cupertinoIcon: CupertinoIcons.settings_solid,
-          ),
-        ),
       ];
 
   static String getRoute(int index) {

@@ -4,7 +4,6 @@ import 'package:archive/archive_io.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:saber_module/components/nextcloud/spinning_loading_icon.dart';
 import 'package:saber_module/data/editor/editor_core_info.dart';
 import 'package:saber_module/data/editor/editor_exporter.dart';
 import 'package:saber_module/data/file_manager/file_manager.dart';
@@ -85,16 +84,7 @@ class _ExportNoteButtonState extends State<ExportNoteButton> {
       openCloseDial: isDialOpen,
       childPadding: const EdgeInsets.all(5),
       spaceBetweenChildren: 4,
-      dialRoot: (context, open, toggleChildren) {
-        return _currentlyExporting
-            ? const SpinningLoadingIcon()
-            : IconButton(
-                padding: EdgeInsets.zero,
-                tooltip: t.home.tooltips.exportNote,
-                onPressed: toggleChildren,
-                icon: const Icon(Icons.share),
-              );
-      },
+     
       children: [
         SpeedDialChild(
           child: const Icon(CupertinoIcons.doc_text),

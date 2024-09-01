@@ -13,7 +13,6 @@ import 'package:saber_module/components/canvas/_canvas_background_painter.dart';
 import 'package:saber_module/components/navbar/responsive_navbar.dart';
 import 'package:saber_module/data/editor/pencil_sound.dart';
 import 'package:saber_module/data/flavor_config.dart';
-import 'package:saber_module/data/nextcloud/nextcloud_client_extension.dart';
 import 'package:saber_module/data/tools/_tool.dart';
 import 'package:saber_module/data/tools/highlighter.dart';
 import 'package:saber_module/data/tools/pen.dart';
@@ -51,21 +50,10 @@ abstract class Prefs {
   static late final EncPref<String> url;
   static late final EncPref<String> username;
 
-  /// the password used to login to Nextcloud
-  static late final EncPref<String> ncPassword;
-  static late final PlainPref<bool> ncPasswordIsAnAppPassword;
+
 
   /// the password used to encrypt/decrypt notes
   static late final EncPref<String> encPassword;
-
-  /// Whether the user is logged in and has provided both passwords.
-  /// Please ensure that the relevant Prefs are loaded before using this.
-  static bool get loggedIn =>
-      url.loaded &&
-      username.value.isNotEmpty &&
-      ncPassword.value.isNotEmpty &&
-      ncPasswordIsAnAppPassword.loaded &&
-      encPassword.value.isNotEmpty;
 
   static late final EncPref<String> key;
   static late final EncPref<String> iv;
@@ -172,15 +160,15 @@ abstract class Prefs {
     //disableAds = PlainPref('disableAds', disableAdsDefault);
 
     //customDataDir = PlainPref('customDataDir', null);
-    allowInsecureConnections = EncPref('allowInsecureConnections', false);
-    url = EncPref('url', '');
-    username = EncPref('username', '');
-    ncPassword = EncPref('ncPassword', '');
-    ncPasswordIsAnAppPassword = PlainPref('ncPasswordIsAnAppPassword', false);
-    encPassword = EncPref('encPassword', '');
+   //allowInsecureConnections = EncPref('allowInsecureConnections', false);
+   //url = EncPref('url', '');
+   //username = EncPref('username', '');
+   //ncPassword = EncPref('ncPassword', '');
+   //ncPasswordIsAnAppPassword = PlainPref('ncPasswordIsAnAppPassword', false);
+   //encPassword = EncPref('encPassword', '');
 
-    key = EncPref('key', '');
-    iv = EncPref('iv', '');
+    //key = EncPref('key', '');
+    //iv = EncPref('iv', '');
 
     pfp = PlainPref('pfp', null);
     syncInBackground = PlainPref('syncInBackground', true);
@@ -296,17 +284,7 @@ abstract class Prefs {
     //_migrateEmailToUsername();
   }
 
-  static void _migrateEmailToUsername() async {
-    await username.waitUntilLoaded();
-    await ncPassword.waitUntilLoaded();
 
-    if (!username.value.contains('@')) return;
-
-    final client = NextcloudClientExtension.withSavedDetails();
-    if (client == null) return;
-
-    username.value = await client.getUsername();
-  }
 
   static bool get isDesktop =>
       Platform.isLinux || Platform.isWindows || Platform.isMacOS;

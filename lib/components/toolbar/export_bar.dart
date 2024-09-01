@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:saber_module/components/nextcloud/spinning_loading_icon.dart';
 import 'package:saber_module/i18n/strings.g.dart';
 
 class ExportBar extends StatefulWidget {
@@ -49,12 +48,8 @@ class _ExportBarState extends State<ExportBar> {
     Future Function(BuildContext)? exportFunction,
     String text,
   ) {
-    if (exportFunction == null || _currentlyExporting != exportFunction) {
       return Text(text);
-    } else {
-      // if this is currently exporting, show a loading icon
-      return const SpinningLoadingIcon();
-    }
+    
   }
 
   @override

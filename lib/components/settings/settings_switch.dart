@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:saber_module/data/prefs.dart';
-import 'package:saber_module/pages/home/settings.dart';
 
 class SettingsSwitch extends StatefulWidget {
   const SettingsSwitch({
@@ -46,11 +45,6 @@ class _SettingsSwitchState extends State<SettingsSwitch> {
 
     return GestureDetector(
       onLongPress: () {
-        SettingsPage.showResetDialog(
-          context: context,
-          pref: widget.pref,
-          prefTitle: widget.title,
-        );
       },
       child: SwitchListTile.adaptive(
         contentPadding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),

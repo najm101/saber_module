@@ -46,7 +46,6 @@ import 'package:saber_module/data/tools/pencil.dart';
 import 'package:saber_module/data/tools/select.dart';
 import 'package:saber_module/data/tools/shape_pen.dart';
 import 'package:saber_module/i18n/strings.g.dart';
-import 'package:saber_module/pages/home/whiteboard.dart';
 import 'package:saber_module/data/file_manager/file_manager.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:super_clipboard/super_clipboard.dart';
@@ -88,7 +87,6 @@ class Editor extends StatefulWidget {
   }
 
   static final List<RegExp> _reservedFilePaths = [
-    RegExp(RegExp.escape(Whiteboard.filePath)),
   ];
 
   /// Whether the platform can rasterize a pdf
@@ -253,19 +251,7 @@ class EditorState extends State<Editor> {
       quillFocus.value = coreInfo.pages[pageIndex].quill
         ..focusNode.requestFocus();
     }
-
-    if (coreInfo.filePath == Whiteboard.filePath &&
-        Prefs.autoClearWhiteboardOnExit.value &&
-        Whiteboard.needsToAutoClearWhiteboard) {
-      // clear whiteboard (and add to history)
-      clearAllPages();
-
-      // save cleared whiteboard
-      await saveToFile();
-      Whiteboard.needsToAutoClearWhiteboard = false;
-    } else {
-      setState(() {});
-    }
+ 
   }
 
   void _setState() => setState(() {});
@@ -1295,11 +1281,6 @@ class EditorState extends State<Editor> {
 
     final theme = Theme.of(context);
 
-    // whiteboard on mobile should keep home screen navbar color
-    if (coreInfo.filePath == Whiteboard.filePath &&
-        !ResponsiveNavbar.isLargeScreen) {
-      return ResponsiveNavbar.setAndroidNavBarColor(theme);
-    }
 
     await null;
     if (!mounted) return;

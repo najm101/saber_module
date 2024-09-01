@@ -7,8 +7,6 @@ import 'package:saber_module/components/navbar/horizontal_navbar.dart';
 import 'package:saber_module/components/navbar/vertical_navbar.dart';
 import 'package:saber_module/data/prefs.dart';
 import 'package:saber_module/data/routes.dart';
-import 'package:saber_module/pages/home/home.dart';
-import 'package:saber_module/pages/home/whiteboard.dart';
 
 class ResponsiveNavbar extends StatefulWidget {
   const ResponsiveNavbar({
@@ -56,22 +54,6 @@ class _ResponsiveNavbarState extends State<ResponsiveNavbar> {
   void onDestinationSelected(int index) {
     if (index == widget.selectedIndex) return;
 
-    // if on whiteboard, check if saved
-    final whiteboardPath = pathToFunction(RoutePaths.home)(
-        {'subpage': HomePage.whiteboardSubpage});
-    if (HomeRoutes.getRoute(widget.selectedIndex) == whiteboardPath) {
-      final savingState = Whiteboard.savingState;
-      switch (savingState) {
-        case null:
-        case SavingState.saved:
-          break;
-        case SavingState.waitingToSave:
-          Whiteboard.triggerSave();
-          return;
-        case SavingState.saving:
-          return;
-      }
-    }
 
     context.go(HomeRoutes.getRoute(index));
   }

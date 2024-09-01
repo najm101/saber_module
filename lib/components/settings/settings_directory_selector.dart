@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:saber_module/components/theming/adaptive_alert_dialog.dart';
 import 'package:saber_module/data/file_manager/file_manager.dart';
-import 'package:saber_module/data/nextcloud/saber_syncer.dart';
 import 'package:saber_module/data/prefs.dart';
 import 'package:saber_module/i18n/strings.g.dart';
 
@@ -130,9 +129,6 @@ class _DirectorySelectorState extends State<DirectorySelector> {
     final colorScheme = Theme.of(context).colorScheme;
 
     final emptyError = widget.mustBeEmpty && !_isEmpty;
-    final syncingError = widget.mustBeDoneSyncing &&
-        (syncer.uploader.numPending > 0 || syncer.downloader.numPending > 0);
-    final anyErrors = emptyError || syncingError;
 
     return AdaptiveAlertDialog(
       title: Text(widget.title),
@@ -163,9 +159,6 @@ class _DirectorySelectorState extends State<DirectorySelector> {
           if (emptyError)
             Text(t.settings.customDataDir.mustBeEmpty,
                 style: TextStyle(color: colorScheme.error)),
-          if (syncingError)
-            Text(t.settings.customDataDir.mustBeDoneSyncing,
-                style: TextStyle(color: colorScheme.error)),
         ],
       ),
       actions: [
@@ -175,7 +168,6 @@ class _DirectorySelectorState extends State<DirectorySelector> {
         ),
         CupertinoDialogAction(
           isDefaultAction: true,
-          onPressed: anyErrors ? null : _onConfirm,
           child: Text(t.settings.customDataDir.select),
         ),
       ],

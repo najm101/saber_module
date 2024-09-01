@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:saber_module/components/canvas/canvas_preview.dart';
 import 'package:saber_module/components/canvas/invert_shader.dart';
 import 'package:saber_module/components/canvas/shader_image.dart';
-import 'package:saber_module/components/home/uploading_indicator.dart';
 import 'package:saber_module/components/navbar/responsive_navbar.dart';
 import 'package:saber_module/data/file_manager/file_manager.dart';
 import 'package:saber_module/data/prefs.dart';
@@ -167,9 +166,6 @@ class _PreviewCardState extends State<PreviewCard> {
                         .substring(widget.filePath.lastIndexOf('/') + 1)),
                   ),
                 ],
-              ),
-              UploadingIndicator(
-                filePath: widget.filePath,
               ),
             ],
           ),

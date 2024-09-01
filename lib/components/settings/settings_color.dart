@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:saber_module/components/theming/adaptive_alert_dialog.dart';
 import 'package:saber_module/data/prefs.dart';
 import 'package:saber_module/i18n/strings.g.dart';
-import 'package:saber_module/pages/home/settings.dart';
 
 class SettingsColor extends StatefulWidget {
   const SettingsColor({
@@ -133,11 +132,6 @@ class _SettingsSwitchState extends State<SettingsColor> {
         }
       },
       onLongPress: () {
-        SettingsPage.showResetDialog(
-          context: context,
-          pref: widget.pref,
-          prefTitle: widget.title,
-        );
       },
     );
   }

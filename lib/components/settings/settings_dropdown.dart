@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:saber_module/components/theming/adaptive_toggle_buttons.dart';
 import 'package:saber_module/data/prefs.dart';
-import 'package:saber_module/pages/home/settings.dart';
 
 class SettingsDropdown<T> extends StatefulWidget {
   const SettingsDropdown({
@@ -91,11 +90,6 @@ class _SettingsDropdownState<T> extends State<SettingsDropdown<T>> {
           dropdownFocusNode.requestFocus();
         },
         onLongPress: () {
-          SettingsPage.showResetDialog(
-            context: context,
-            pref: widget.pref,
-            prefTitle: widget.title,
-          );
         },
         contentPadding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
         leading: AnimatedSwitcher(

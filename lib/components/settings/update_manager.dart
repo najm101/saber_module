@@ -8,7 +8,6 @@ import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:saber_module/components/nextcloud/spinning_loading_icon.dart';
 import 'package:saber_module/components/settings/app_info.dart';
 import 'package:saber_module/components/theming/adaptive_alert_dialog.dart';
 import 'package:saber_module/data/flavor_config.dart';
@@ -112,26 +111,7 @@ abstract class UpdateManager {
               child: Text(
                   MaterialLocalizations.of(context).modalBarrierDismissLabel),
             ),
-            CupertinoDialogAction(
-              onPressed: (directDownloadStarted || canNotDownloadYet)
-                  ? null
-                  : () {
-                      if (directDownloadLink != null) {
-                        _directlyDownloadUpdate(directDownloadLink)
-                            .then((_) => Navigator.pop(context));
-                        setState(() => directDownloadStarted = true);
-                      } else {
-                        launchUrl(AppInfo.releasesUrl);
-                      }
-                    },
-              child: () {
-                if (directDownloadStarted) {
-                  return const SpinningLoadingIcon();
-                } else {
-                  return Text(t.update.update);
-                }
-              }(),
-            ),
+         
           ],
         ),
       ),
