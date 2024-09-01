@@ -36,7 +36,6 @@ import 'package:saber_module/data/editor/page.dart';
 import 'package:saber_module/data/editor/pencil_sound.dart';
 import 'package:saber_module/data/extensions/change_notifier_extensions.dart';
 import 'package:saber_module/data/file_manager/file_manager.dart';
-import 'package:saber_module/data/nextcloud/saber_syncer.dart';
 import 'package:saber_module/data/prefs.dart';
 import 'package:saber_module/data/tools/_tool.dart';
 import 'package:saber_module/data/tools/eraser.dart';
@@ -46,7 +45,9 @@ import 'package:saber_module/data/tools/pen.dart';
 import 'package:saber_module/data/tools/pencil.dart';
 import 'package:saber_module/data/tools/select.dart';
 import 'package:saber_module/data/tools/shape_pen.dart';
+import 'package:saber_module/data/tools/stroke_properties.dart';
 import 'package:saber_module/i18n/strings.g.dart';
+import 'package:saber_module/main_common.dart';
 import 'package:saber_module/pages/home/whiteboard.dart';
 import 'package:saber_module/data/file_manager/file_manager.dart';
 import 'package:screenshot/screenshot.dart';
@@ -192,7 +193,14 @@ class EditorState extends State<Editor> {
   @override
   void initState() {
     DynamicMaterialApp.addFullscreenListener(_setState);
+    StrokeOptionsExtension.setDefaults();
+    Prefs.init();
 
+    setLocale();
+    Prefs.locale.addListener(setLocale);
+    Prefs.customDataDir.addListener(FileManager.migrateDataDir);
+    startSyncAfterLoaded();
+    setupBackgroundSync();
     _initAsync();
     _assignKeybindings();
 
@@ -821,29 +829,6 @@ class EditorState extends State<Editor> {
       images: const [],
       quillChange: event,
     ));
-  }
-
-  void _refreshCurrentNote() async {
-    if (coreInfo.readOnly) return;
-    if (!Prefs.loggedIn) return;
-
-    final syncFile =
-        await SaberSyncFile.relative(coreInfo.filePath + Editor.extension);
-
-    final bestFile = await SaberSyncInterface.getBestFile(syncFile);
-    if (bestFile != BestFile.remote) return;
-
-    late final StreamSubscription<SaberSyncFile> subscription;
-    void listener(SaberSyncFile transferred) {
-      if (transferred != syncFile) return;
-      subscription.cancel();
-      _initStrokes();
-    }
-
-    subscription = syncer.downloader.transferStream.listen(listener);
-
-    await syncer.downloader.enqueue(syncFile: syncFile);
-    syncer.downloader.bringToFront(syncFile);
   }
 
   void autosaveAfterDelay() {
@@ -1777,22 +1762,13 @@ class EditorState extends State<Editor> {
       canRasterPdf: Editor.canRasterPdf,
       getIsWatchingServer: () => _watchServerTimer?.isActive ?? false,
       setIsWatchingServer: (bool watch) {
-        if (watch) {
-          _watchServerTimer ??= Timer.periodic(
-            const Duration(seconds: 5),
-            (_) => _refreshCurrentNote(),
-          );
-          coreInfo.readOnlyBecauseWatchingServer |= !coreInfo.readOnly;
-          if (!coreInfo.readOnly) setState(() => coreInfo.readOnly = true);
-        } else {
-          _watchServerTimer?.cancel();
-          _watchServerTimer = null;
-          if (coreInfo.readOnlyBecauseWatchingServer)
-            setState(() {
-              coreInfo.readOnly = false;
-              coreInfo.readOnlyBecauseWatchingServer = false;
-            });
-        }
+        _watchServerTimer?.cancel();
+        _watchServerTimer = null;
+        if (coreInfo.readOnlyBecauseWatchingServer)
+          setState(() {
+            coreInfo.readOnly = false;
+            coreInfo.readOnlyBecauseWatchingServer = false;
+          });
       },
     );
   }
