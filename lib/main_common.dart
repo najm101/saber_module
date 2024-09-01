@@ -1,3 +1,5 @@
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'dart:async';
 import 'dart:developer' as dev;
 import 'dart:io';
@@ -107,12 +109,12 @@ void setupBackgroundSync() {
     requiresStorageNotLow: true,
   );
 
-  if (Platform.isAndroid)
+  if (Platform.isAndroid) {
     Workmanager().registerPeriodicTask(uniqueName, uniqueName,
         frequency: initialDelay,
         initialDelay: initialDelay,
         constraints: constraints);
-  else if (Platform.isIOS)
+  } else if (Platform.isIOS)
     Workmanager().registerOneOffTask(uniqueName, uniqueName,
         initialDelay: initialDelay, constraints: constraints);
 }

@@ -171,7 +171,7 @@ abstract class Prefs {
     }
     //disableAds = PlainPref('disableAds', disableAdsDefault);
 
-    customDataDir = PlainPref('customDataDir', null);
+    //customDataDir = PlainPref('customDataDir', null);
     allowInsecureConnections = EncPref('allowInsecureConnections', false);
     url = EncPref('url', '');
     username = EncPref('username', '');
@@ -293,7 +293,7 @@ abstract class Prefs {
 
     locale = PlainPref('locale', '');
 
-    _migrateEmailToUsername();
+    //_migrateEmailToUsername();
   }
 
   static void _migrateEmailToUsername() async {
