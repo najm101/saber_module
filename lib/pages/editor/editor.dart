@@ -45,9 +45,7 @@ import 'package:saber_module/data/tools/pen.dart';
 import 'package:saber_module/data/tools/pencil.dart';
 import 'package:saber_module/data/tools/select.dart';
 import 'package:saber_module/data/tools/shape_pen.dart';
-import 'package:saber_module/data/tools/stroke_properties.dart';
 import 'package:saber_module/i18n/strings.g.dart';
-import 'package:saber_module/main_common.dart';
 import 'package:saber_module/pages/home/whiteboard.dart';
 import 'package:saber_module/data/file_manager/file_manager.dart';
 import 'package:screenshot/screenshot.dart';
@@ -192,16 +190,8 @@ class EditorState extends State<Editor> {
 
   @override
   void initState() {
-    
-    StrokeOptionsExtension.setDefaults();
-    Prefs.init();
-    FileManager.init(); 
-    setLocale();
-    Prefs.locale.addListener(setLocale);
-    Prefs.customDataDir.addListener(FileManager.migrateDataDir);
-    startSyncAfterLoaded();
-    setupBackgroundSync();
     DynamicMaterialApp.addFullscreenListener(_setState);
+  
     _initAsync();
     _assignKeybindings();
 
@@ -831,6 +821,8 @@ class EditorState extends State<Editor> {
       quillChange: event,
     ));
   }
+
+
 
   void autosaveAfterDelay() {
     late final void Function() callback;
@@ -1763,13 +1755,15 @@ class EditorState extends State<Editor> {
       canRasterPdf: Editor.canRasterPdf,
       getIsWatchingServer: () => _watchServerTimer?.isActive ?? false,
       setIsWatchingServer: (bool watch) {
-        _watchServerTimer?.cancel();
-        _watchServerTimer = null;
-        if (coreInfo.readOnlyBecauseWatchingServer)
-          setState(() {
-            coreInfo.readOnly = false;
-            coreInfo.readOnlyBecauseWatchingServer = false;
-          });
+        
+          _watchServerTimer?.cancel();
+          _watchServerTimer = null;
+          if (coreInfo.readOnlyBecauseWatchingServer)
+            setState(() {
+              coreInfo.readOnly = false;
+              coreInfo.readOnlyBecauseWatchingServer = false;
+            });
+        
       },
     );
   }
