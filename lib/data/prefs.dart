@@ -41,7 +41,6 @@ abstract class Prefs {
   @visibleForTesting
   static bool warnIfPrefAccessedBeforeLoaded = true;
 
-  static late final PlainPref<bool> disableAds;
 
   static late final PlainPref<String?> customDataDir;
 
