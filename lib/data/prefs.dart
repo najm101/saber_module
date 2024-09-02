@@ -264,10 +264,7 @@ abstract class Prefs {
         historicalKeys: const ['lastPanLock']);
     lastAxisAlignedPanLock = PlainPref('lastAxisAlignedPanLock', false);
 
-    // ignore: deprecated_member_use_from_same_package
-    _hasDraggedSizeIndicatorBefore = PlainPref(
-        '_hasDraggedSizeIndicatorBefore', true,
-        deprecatedKeys: const ['hasDraggedSizeIndicatorBefore']);
+
 
     recentFiles = PlainPref('recentFiles', [],
         historicalKeys: const ['recentlyAccessed']);
