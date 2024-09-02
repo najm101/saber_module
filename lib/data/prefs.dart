@@ -268,13 +268,9 @@ abstract class Prefs {
         DateTime.parse('2023-12-10T10:06:31.000Z'));
     lastStorageQuota = PlainPref('lastStorageQuota', null);
 
-    shouldCheckForUpdates = PlainPref('shouldCheckForUpdates',
-        FlavorConfig.shouldCheckForUpdatesByDefault && !Platform.isLinux);
-    shouldAlwaysAlertForUpdates = PlainPref('shouldAlwaysAlertForUpdates',
-        (kDebugMode || FlavorConfig.dirty) ? true : false,
-        deprecatedKeys: const ['updatesToIgnore']);
 
-    locale = PlainPref('locale', '');
+
+    locale = PlainPref('locale', 'ar');
 
   }
 
