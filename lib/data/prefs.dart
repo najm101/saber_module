@@ -11,7 +11,6 @@ import 'package:nextcloud/provisioning_api.dart';
 import 'package:perfect_freehand/perfect_freehand.dart';
 import 'package:saber_module/components/canvas/_canvas_background_painter.dart';
 import 'package:saber_module/components/navbar/responsive_navbar.dart';
-import 'package:saber_module/data/editor/pencil_sound.dart';
 import 'package:saber_module/data/flavor_config.dart';
 import 'package:saber_module/data/tools/_tool.dart';
 import 'package:saber_module/data/tools/highlighter.dart';
@@ -50,10 +49,21 @@ abstract class Prefs {
   static late final EncPref<String> url;
   static late final EncPref<String> username;
 
-
+  /// the password used to login to Nextcloud
+  static late final EncPref<String> ncPassword;
+  static late final PlainPref<bool> ncPasswordIsAnAppPassword;
 
   /// the password used to encrypt/decrypt notes
   static late final EncPref<String> encPassword;
+
+  /// Whether the user is logged in and has provided both passwords.
+  /// Please ensure that the relevant Prefs are loaded before using this.
+  static bool get loggedIn =>
+      url.loaded &&
+      username.value.isNotEmpty &&
+      ncPassword.value.isNotEmpty &&
+      ncPasswordIsAnAppPassword.loaded &&
+      encPassword.value.isNotEmpty;
 
   static late final EncPref<String> key;
   static late final EncPref<String> iv;
@@ -85,8 +95,8 @@ abstract class Prefs {
   static late final PlainPref<int> autosaveDelay;
   static late final PlainPref<int> shapeRecognitionDelay;
   static late final PlainPref<bool> autoStraightenLines;
-  static late final PlainPref<PencilSoundSetting> pencilSound;
 
+  static late final PlainPref<bool> simplifiedHomeLayout;
   static late final PlainPref<bool> hideHomeBackgrounds;
   static late final PlainPref<bool> printPageIndicators;
 
@@ -153,25 +163,25 @@ abstract class Prefs {
 
   static void init() {
     final disableAdsDefault = androidVersion < 10;
-   // if (disableAdsDefault) {
-   //   log.info(
-   //       'Disabling ads because Android version ($androidVersion) is < 10');
-   // }
-    //disableAds = PlainPref('disableAds', disableAdsDefault);
+    if (disableAdsDefault) {
+      log.info(
+          'Disabling ads because Android version ($androidVersion) is < 10');
+    }
+    disableAds = PlainPref('disableAds', disableAdsDefault);
 
-    //customDataDir = PlainPref('customDataDir', null);
-   //allowInsecureConnections = EncPref('allowInsecureConnections', false);
-   //url = EncPref('url', '');
-   //username = EncPref('username', '');
-   //ncPassword = EncPref('ncPassword', '');
-   //ncPasswordIsAnAppPassword = PlainPref('ncPasswordIsAnAppPassword', false);
-   //encPassword = EncPref('encPassword', '');
+    customDataDir = PlainPref('customDataDir', null);
+    allowInsecureConnections = EncPref('allowInsecureConnections', false);
+    url = EncPref('url', '');
+    username = EncPref('username', '');
+    ncPassword = EncPref('ncPassword', '');
+    ncPasswordIsAnAppPassword = PlainPref('ncPasswordIsAnAppPassword', false);
+    encPassword = EncPref('encPassword', '');
 
-    //key = EncPref('key', '');
-    //iv = EncPref('iv', '');
+    key = EncPref('key', '');
+    iv = EncPref('iv', '');
 
     pfp = PlainPref('pfp', null);
-   // syncInBackground = PlainPref('syncInBackground', true);
+    syncInBackground = PlainPref('syncInBackground', true);
 
     appTheme = PlainPref('appTheme', ThemeMode.system);
     platform = PlainPref('platform', defaultTargetPlatform);
@@ -197,9 +207,8 @@ abstract class Prefs {
     autosaveDelay = PlainPref('autosaveDelay', 10000);
     shapeRecognitionDelay = PlainPref('shapeRecognitionDelay', 500);
     autoStraightenLines = PlainPref('autoStraightenLines', true);
-    pencilSound =
-        PlainPref('pencilSound', PencilSoundSetting.onButNotInSilentMode);
 
+    simplifiedHomeLayout = PlainPref('simplifiedHomeLayout', false);
     hideHomeBackgrounds = PlainPref('hideHomeBackgrounds', false);
     printPageIndicators = PlainPref('printPageIndicators', false);
 
@@ -273,15 +282,14 @@ abstract class Prefs {
         DateTime.parse('2023-12-10T10:06:31.000Z'));
     lastStorageQuota = PlainPref('lastStorageQuota', null);
 
-    //shouldCheckForUpdates = PlainPref('shouldCheckForUpdates',
-    //    FlavorConfig.shouldCheckForUpdatesByDefault && !Platform.isLinux);
-    //shouldAlwaysAlertForUpdates = PlainPref('shouldAlwaysAlertForUpdates',
-    //    (kDebugMode || FlavorConfig.dirty) ? true : false,
-    //    deprecatedKeys: const ['updatesToIgnore']);
+    shouldCheckForUpdates = PlainPref('shouldCheckForUpdates',
+        FlavorConfig.shouldCheckForUpdatesByDefault && !Platform.isLinux);
+    shouldAlwaysAlertForUpdates = PlainPref('shouldAlwaysAlertForUpdates',
+        (kDebugMode || FlavorConfig.dirty) ? true : false,
+        deprecatedKeys: const ['updatesToIgnore']);
 
     locale = PlainPref('locale', '');
 
-    //_migrateEmailToUsername();
   }
 
 
@@ -420,8 +428,7 @@ class PlainPref<T> extends IPref<T> {
         T == LayoutSize ||
         T == ToolId ||
         T == CanvasBackgroundPattern ||
-        T == DateTime ||
-        T == PencilSoundSetting);
+        T == DateTime);
   }
 
   @override
@@ -511,9 +518,7 @@ class PlainPref<T> extends IPref<T> {
         } else {
           return await _prefs!.setString(key, date.toIso8601String());
         }
-      } else if (T == PencilSoundSetting) {
-        return await _prefs!.setInt(key, (value as PencilSoundSetting).index);
-      } else {
+      }else {
         return await _prefs!.setString(key, value as String);
       }
     } finally {
@@ -583,10 +588,7 @@ class PlainPref<T> extends IPref<T> {
         String? iso8601 = _prefs!.getString(key);
         if (iso8601 == null) return null;
         return DateTime.parse(iso8601) as T;
-      } else if (T == PencilSoundSetting) {
-        final index = _prefs!.getInt(key);
-        return index != null ? PencilSoundSetting.values[index] as T? : null;
-      } else {
+      }  else {
         return _prefs!.get(key) as T?;
       }
     } catch (e) {

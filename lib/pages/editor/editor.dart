@@ -33,7 +33,6 @@ import 'package:saber_module/data/editor/editor_core_info.dart';
 import 'package:saber_module/data/editor/editor_exporter.dart';
 import 'package:saber_module/data/editor/editor_history.dart';
 import 'package:saber_module/data/editor/page.dart';
-import 'package:saber_module/data/editor/pencil_sound.dart';
 import 'package:saber_module/data/extensions/change_notifier_extensions.dart';
 import 'package:saber_module/data/file_manager/file_manager.dart';
 import 'package:saber_module/data/prefs.dart';
@@ -571,8 +570,7 @@ class EditorState extends State<Editor> {
       shouldPlayPencilSound = false;
     }
 
-    if (Prefs.pencilSound.value != PencilSoundSetting.off &&
-        shouldPlayPencilSound) PencilSound.resume();
+
 
     previousPosition = position;
     moveOffset = Offset.zero;
@@ -590,7 +588,7 @@ class EditorState extends State<Editor> {
     final position = page.renderBox!.globalToLocal(details.focalPoint);
     final offset = position - previousPosition;
 
-    if (PencilSound.isPlaying) PencilSound.update(offset.distance);
+
 
     if (currentTool is Pen) {
       (currentTool as Pen).onDragUpdate(position, currentPressure);
@@ -627,7 +625,6 @@ class EditorState extends State<Editor> {
   void onDrawEnd(ScaleEndDetails details) {
     final page = coreInfo.pages[dragPageIndex!];
     bool shouldSave = true;
-    if (PencilSound.isPlaying) PencilSound.pause();
     setState(() {
       if (currentTool is Pen) {
         Stroke newStroke = (currentTool as Pen).onDragEnd();
