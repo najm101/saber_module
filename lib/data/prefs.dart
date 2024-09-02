@@ -166,7 +166,7 @@ abstract class Prefs {
     editorToolbarShowInFullscreen =
         PlainPref('editorToolbarShowInFullscreen', true);
     editorFingerDrawing = PlainPref('editorFingerDrawing', true);
-    editorAutoInvert = PlainPref('editorAutoInvert', true,
+    editorAutoInvert = PlainPref('editorAutoInvert', false,
         historicalKeys: const ['editorAutoDarken']);
     // ignore: deprecated_member_use_from_same_package
     editorOpaqueBackgrounds = PlainPref('__editorOpaqueBackgrounds', true,

@@ -1689,8 +1689,7 @@ class EditorState extends State<Editor> {
 
   Widget bottomSheet(BuildContext context) {
     final Brightness brightness = Theme.of(context).brightness;
-    final bool invert =
-        Prefs.editorAutoInvert.value && brightness == Brightness.dark;
+    final bool invert = false;
     final int currentPageIndex = this.currentPageIndex;
 
     return EditorBottomSheet(
