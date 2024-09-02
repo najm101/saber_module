@@ -162,20 +162,9 @@ abstract class Prefs {
   static late final PlainPref<String> locale;
 
   static void init() {
-    final disableAdsDefault = androidVersion < 10;
-    if (disableAdsDefault) {
-      log.info(
-          'Disabling ads because Android version ($androidVersion) is < 10');
-    }
-    disableAds = PlainPref('disableAds', disableAdsDefault);
 
     customDataDir = PlainPref('customDataDir', null);
     allowInsecureConnections = EncPref('allowInsecureConnections', false);
-    url = EncPref('url', '');
-    username = EncPref('username', '');
-    ncPassword = EncPref('ncPassword', '');
-    ncPasswordIsAnAppPassword = PlainPref('ncPasswordIsAnAppPassword', false);
-    encPassword = EncPref('encPassword', '');
 
     key = EncPref('key', '');
     iv = EncPref('iv', '');
