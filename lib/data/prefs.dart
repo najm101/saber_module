@@ -45,24 +45,8 @@ abstract class Prefs {
   static late final PlainPref<String?> customDataDir;
 
   static late final EncPref<bool> allowInsecureConnections;
-  static late final EncPref<String> url;
-  static late final EncPref<String> username;
 
-  /// the password used to login to Nextcloud
-  static late final EncPref<String> ncPassword;
-  static late final PlainPref<bool> ncPasswordIsAnAppPassword;
 
-  /// the password used to encrypt/decrypt notes
-  static late final EncPref<String> encPassword;
-
-  /// Whether the user is logged in and has provided both passwords.
-  /// Please ensure that the relevant Prefs are loaded before using this.
-  static bool get loggedIn =>
-      url.loaded &&
-      username.value.isNotEmpty &&
-      ncPassword.value.isNotEmpty &&
-      ncPasswordIsAnAppPassword.loaded &&
-      encPassword.value.isNotEmpty;
 
   static late final EncPref<String> key;
   static late final EncPref<String> iv;
